@@ -32,8 +32,28 @@ public class IntQueueTest {
     @Before
     public void setUp() {
         // comment/uncomment these lines to test each class
-        mQueue = new LinkedIntQueue();
-        // mQueue = new ArrayIntQueue();
+        // mQueue = new LinkedIntQueue();
+        mQueue = new ArrayIntQueue();
+    }
+
+    @Test
+    public void testClear() throws IOException {
+        mQueue.enqueue(0);
+        mQueue.enqueue(1);
+        mQueue.enqueue(2);
+        mQueue.clear();
+        assertTrue(mQueue.isEmpty());
+    }
+
+    @Test
+    public void testDequeueNotEmptyQueue() {
+        mQueue.enqueue(0);
+        assertEquals(mQueue.dequeue(), Integer.valueOf(0));
+    }
+
+    @Test
+    public void testDequeueEmptyQueue() {
+        assertNull(mQueue.dequeue());
     }
 
     @Test
@@ -44,6 +64,27 @@ public class IntQueueTest {
     @Test
     public void testPeekEmptyQueue() {
         assertNull(mQueue.peek());
+    }
+
+    @Test
+    public void testPeekNotEmptyQueue() {
+        mQueue.enqueue(0);
+        assertEquals(mQueue.peek(), Integer.valueOf(0));
+        mQueue.clear();
+    }
+
+    @Test
+    public void testSizeEmptyQueue() {
+        assertEquals(mQueue.size(), 0);
+    }
+
+    @Test
+    public void testSizeNotEmptyQueue() {
+        mQueue.enqueue(0);
+        mQueue.enqueue(1);
+        mQueue.enqueue(2);
+        assertEquals(mQueue.size(), 3);
+        mQueue.clear();
     }
 
     @Test
@@ -64,8 +105,25 @@ public class IntQueueTest {
             for (Integer result : correctResult) {
                 assertEquals(mQueue.dequeue(), result);
             }
+        } finally {
+            in.close();
         }
     }
 
+    @Test
+    public void testEnsureCapacity() {
+        for (int i = 0; i < 5; i++) {
+            mQueue.enqueue(0);
+        }
+        for (int i = 0; i < 4; i++) {
+            mQueue.dequeue();
+        }
+        for (int i = 1; i < 11; i++) {
+            mQueue.enqueue(i);
+        }
+        for (int i = 0; i < 11; i++) {
+            assertEquals(mQueue.dequeue(), Integer.valueOf(i));
+        }
+    }
 
 }
